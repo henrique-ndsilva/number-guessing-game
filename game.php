@@ -13,9 +13,9 @@
         echo "Welcome to the Number Guessing Game!\n";
         echo "I'm thinking of a number between $min and $max.\n";
         echo "\nPlease select the difficulty level:
-        1. Easy ($easy chances)
-        2. Medium ($medium chances)
-        3. Hard ($hard chances)\n";
+        1. Easy ($easy chances and one tip)
+        2. Medium ($medium chances and one tip)
+        3. Hard ($hard chances and no tip)\n";
         echo "Enter your choice: ";
         $handle = fopen("php://stdin", "r");
         $choice = (int) trim(fgets($handle));
@@ -40,24 +40,58 @@
         }
 
         echo "You have $chances chances to guess the number.\n";
-        echo "Let's start the game!\n\n";
+        echo "Game starting in 3 seconds...\n\n";
+        sleep(3);
 
-        for ($attempts=1; $attempts <= $chances; $attempts++) { 
+        $startTime = microtime(true); // Starts counting.
+
+        for ($attempts=1; $attempts <= $chances; $attempts++) {
+            if (($attempts == 6 && $chances == $easy) || ($attempts == 4 && $chances == $medium)) {
+                echo "\nDo you want a tip?\n";
+                echo "y/n: ";
+                $choice = (string) trim(fgets($handle));
+
+                switch (strtolower($choice)) {
+                    case 'y':
+                    case 'yes':
+                        if ($number > 9) {
+                            $tip = substr((string)$number, 0, 1);
+                            echo "\nTip: The number starts with $tip.\n\n";
+                        } else {
+                            echo "\nThe number is only one digit.\n\n";
+                        }
+                        sleep(2);
+                        break;
+                    case 'n':
+                    case 'no':
+                        echo "\nYou have chosen to not have a tip, continuing the game...\n\n";
+                        sleep(2);
+                        break;
+                    default:
+                        echo "\nInvalid choice! Continuing the game...\n\n";
+                        sleep(2);
+                        break;
+                }
+            }
             echo "Enter your guess: ";
             $guess = (int) trim(fgets($handle));
 
             if ($guess == $number) {
-                echo "Congratulations! You guessed the correct number in $attempts " . ($attempts == 1 ? "attempt" : "attempts") . ".\n";
+                $endTime = microtime(true);
+                $timerSeconds = round($endTime - $startTime);
+                echo "\nCongratulations! You guessed the correct number in $attempts " . ($attempts == 1 ? "attempt" : "attempts") . " and took $timerSeconds seconds.\n\n";
                 break;
             } elseif ($number > $guess) {
-                echo "Incorrect! The number is greater than $guess.\n";
+                echo "\nIncorrect! The number is greater than $guess.\n";
             } else {
-                echo "Incorrect! The number is less than $guess.\n";
+                echo "\nIncorrect! The number is less than $guess.\n";
             }
         }
         
         if ($attempts > $chances) {
-            echo "\nGame over! The number was $number.\n";
+            $endTime = microtime(true);
+            $timerSeconds = round($endTime - $startTime);
+            echo "\nGame over! The number was $number and you took $timerSeconds seconds.\n\n";
         }
 
         echo "Would you like to play again?\n";
