@@ -4,8 +4,11 @@ Welcome to the **Number Guessing Game**! This is a console-based number guessing
 
 ## Game Features
 - Choose from three difficulty levels: **Easy**, **Medium**, or **Hard**.
+- The game will generate a random number.
 - You will have a set number of chances to guess the correct number based on your selected difficulty.
-- The game will tell you if the guessed number is higher or lower than the correct number.
+- There is a timer that tracks how long you took to guess.
+- The game will tell you if the generated number is higher or lower than your guess.
+- At **Medium** and **Easy** difficulty levels, you will receive one tip.
 - After each game, you can choose to play again or exit.
 
 ## How to Run the Project
